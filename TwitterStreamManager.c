@@ -13,6 +13,7 @@
 
 int main(int argc, char *argv[])
 {
+    printf("Starting Twitter Stream Manager...\n");
     pid_t cpid, pid;
     int status;
     cpid = fork();
@@ -26,17 +27,16 @@ int main(int argc, char *argv[])
             break;
 
         case 0 : //Child Process
-            printf("Child process %ld\n", (long) getpid());
+            printf("Starting Twitter Stream Listener...\n");
             execlp("java", "java", "-jar", "TwitterStreamListener.jar", NULL);
             sleep(1); //debug
             return 0; //exit child process
             break;
 
         default : //Parent process
-            printf("Parent process %ld\n", (long) getpid());
             while ((pid = waitpid(-1, NULL, WNOHANG)) != -1);
 
-            printf("Starting new child\n\n");
+            printf("TwitterStreamListener process ended...\n\n");
             cpid = fork(); //restart
             break;
         }
